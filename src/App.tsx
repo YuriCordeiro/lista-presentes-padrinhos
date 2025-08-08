@@ -23,6 +23,20 @@ const AppContainer = styled.div`
   position: relative;
   overflow-x: hidden;
   
+  /* Largura de 80% para desktop */
+  width: 100%;
+  max-width: 100vw;
+  margin: 0 auto;
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+    width: 90%;
+    max-width: none;
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    width: 80%;
+  }
+  
   &::before {
     content: '';
     position: fixed;

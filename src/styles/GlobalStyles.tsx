@@ -10,6 +10,14 @@ export const GlobalStyles = createGlobalStyle`
   html {
     font-size: 16px;
     scroll-behavior: smooth;
+    
+    @media (min-width: 1280px) {
+      font-size: 17px;
+    }
+    
+    @media (min-width: 1536px) {
+      font-size: 18px;
+    }
   }
   
   body {
@@ -27,6 +35,7 @@ export const GlobalStyles = createGlobalStyle`
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
   
   /* Scrollbar customization */

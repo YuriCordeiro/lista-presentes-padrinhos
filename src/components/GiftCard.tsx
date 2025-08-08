@@ -16,10 +16,17 @@ const Card = styled(motion.div)`
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.shadows.lg};
   transition: all ${({ theme }) => theme.animations.duration.normal} ${({ theme }) => theme.animations.easing.default};
+  width: 100%;
+  max-width: 100%;
   
   &:hover {
     transform: translateY(-4px);
     box-shadow: ${({ theme }) => theme.shadows.xl};
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+    max-width: 400px;
+    margin: 0 auto;
   }
 `;
 
@@ -32,6 +39,14 @@ const ImageContainer = styled.div`
   
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     height: 240px;
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    height: 280px;
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints['2xl']}) {
+    height: 300px;
   }
 `;
 
@@ -53,6 +68,11 @@ const CardContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.md};
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    padding: ${({ theme }) => theme.spacing.xl};
+    gap: ${({ theme }) => theme.spacing.lg};
+  }
 `;
 
 const ProductTitle = styled.h3`

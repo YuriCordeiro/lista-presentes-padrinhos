@@ -16,14 +16,28 @@ const HeaderContainer = styled.header`
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.md};
   }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    padding: ${({ theme }) => theme.spacing['2xl']} ${({ theme }) => theme.spacing.xl};
+  }
 `;
 
 const HeaderContent = styled.div`
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.lg};
+  width: 100%;
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+    max-width: 90%;
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    max-width: 85%;
+    gap: ${({ theme }) => theme.spacing.xl};
+  }
 `;
 
 const WelcomeSection = styled(motion.div)`
@@ -38,6 +52,10 @@ const WelcomeTitle = styled.h1`
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: ${({ theme }) => theme.typography.fontSize['2xl']};
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    font-size: ${({ theme }) => theme.typography.fontSize['4xl']};
   }
 `;
 
@@ -54,6 +72,13 @@ const WelcomeDescription = styled.p`
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     font-size: ${({ theme }) => theme.typography.fontSize.base};
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    font-size: ${({ theme }) => theme.typography.fontSize.xl};
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
   }
 `;
 

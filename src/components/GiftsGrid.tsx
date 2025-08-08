@@ -11,12 +11,18 @@ interface GiftsGridProps {
 
 const Section = styled.section`
   padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
   
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     padding: ${({ theme }) => theme.spacing['2xl']} ${({ theme }) => theme.spacing.lg};
+    max-width: 90%;
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    max-width: 85%;
+    padding: ${({ theme }) => theme.spacing['3xl']} ${({ theme }) => theme.spacing.xl};
   }
 `;
 
@@ -51,7 +57,13 @@ const Grid = styled.div`
   }
   
   @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    gap: ${({ theme }) => theme.spacing['2xl']};
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints['2xl']}) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: ${({ theme }) => theme.spacing['2xl']};
   }
 `;
 

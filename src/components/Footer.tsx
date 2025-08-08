@@ -9,11 +9,24 @@ const FooterContainer = styled.footer`
   padding: ${({ theme }) => theme.spacing.xl} ${({ theme }) => theme.spacing.md};
   margin-top: auto;
   text-align: center;
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    padding: ${({ theme }) => theme.spacing['2xl']} ${({ theme }) => theme.spacing.xl};
+  }
 `;
 
 const FooterContent = styled(motion.div)`
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
+  width: 100%;
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+    max-width: 90%;
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) {
+    max-width: 85%;
+  }
 `;
 
 const FooterMessage = styled.p`
