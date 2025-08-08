@@ -106,19 +106,6 @@ const ActionButton = styled.a`
   }
 `;
 
-const OrderBadge = styled.div`
-  position: absolute;
-  top: ${({ theme }) => theme.spacing.sm};
-  left: ${({ theme }) => theme.spacing.sm};
-  background: ${({ theme }) => theme.colors.background.overlay};
-  color: ${({ theme }) => theme.colors.text.primary};
-  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  font-size: ${({ theme }) => theme.typography.fontSize.xs};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  backdrop-filter: blur(10px);
-`;
-
 export const GiftCard: React.FC<GiftCardProps> = ({ gift, index }) => {
   return (
     <Card

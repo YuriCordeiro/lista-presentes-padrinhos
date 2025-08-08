@@ -36,16 +36,6 @@ const Title = styled.h2`
   }
 `;
 
-const Subtitle = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.base};
-  color: ${({ theme }) => theme.colors.text.muted};
-  margin: 0;
-  
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
-    font-size: ${({ theme }) => theme.typography.fontSize.lg};
-  }
-`;
-
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -108,21 +98,6 @@ const LoadingIndicator = styled(motion.div)`
   text-align: center;
   padding: ${({ theme }) => theme.spacing.xl};
   color: ${({ theme }) => theme.colors.text.muted};
-`;
-
-const Counter = styled(motion.div)`
-  display: inline-flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  background: ${({ theme }) => theme.glassmorphism.background};
-  backdrop-filter: ${({ theme }) => theme.glassmorphism.backdropFilter};
-  border: ${({ theme }) => theme.glassmorphism.border};
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  font-size: ${({ theme }) => theme.typography.fontSize.sm};
-  color: ${({ theme }) => theme.colors.text.secondary};
-  margin: ${({ theme }) => theme.spacing.lg} auto 0;
-  width: fit-content;
 `;
 
 export const GiftsGrid: React.FC<GiftsGridProps> = ({ gifts, loadingState }) => {
