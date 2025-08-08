@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Lista de Presentes - Padrinhos | Carol & Yuri</title>
+    <meta name="title" content="Lista de Presentes - Padrinhos | Carol & Yuri" />
+    <meta name="description" content="Lista de presentes elegante para nossos queridos padrinhos. Escolhidos com carinho por Carol e Yuri." />
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#000000" />
+    <meta name="msapplication-navbutton-color" content="#000000" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Lista de Presentes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Lista de Presentes - Padrinhos" />
+    <meta property="og:description" content="Lista de presentes elegante para nossos queridos padrinhos" />
+    <meta property="og:locale" content="pt_BR" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" 
+      rel="stylesheet" 
+    />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    
+    <!-- Performance optimizations -->
+    <link rel="dns-prefetch" href="https://docs.google.com" />
+    <link rel="dns-prefetch" href="https://api.allorigins.win" />
+    
+    <style>
+      /* Critical CSS for loading */
+      body {
+        margin: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #000000;
+        color: #ffffff;
+        overflow-x: hidden;
+      }
+      
+      /* Prevent FOUC */
+      .app {
+        opacity: 0;
+        animation: fadeIn 0.3s ease-in-out forwards;
+      }
+      
+      @keyframes fadeIn {
+        to { opacity: 1; }
+      }
+      
+      /* Loading state */
+      #loading-fallback {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #000000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top: 3px solid #10b981;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Fallback loading for slow connections -->
+    <div id="loading-fallback">
+      <div class="spinner"></div>
+    </div>
+    
+    <div id="root"></div>
+    
+    <script>
+      // Remove fallback loading when React loads
+      window.addEventListener('load', () => {
+        const fallback = document.getElementById('loading-fallback');
+        if (fallback) {
+          fallback.style.opacity = '0';
+          setTimeout(() => fallback.remove(), 300);
+        }
+      });
+      
+      // Service Worker registration
+      if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('SW registered'))
+            .catch(() => console.log('SW registration failed'));
+        });
+      }
+    </script>
+    
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
