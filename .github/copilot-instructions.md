@@ -26,10 +26,12 @@ Este é um projeto de Lista de Presentes elegante para padrinhos, com:
 6. **Cache**: Sistema inteligente para performance
 
 ## Google Sheets Integration
-- Colunas: Título, URL do Produto, URL da Imagem, Ordem
+- Colunas: Título, URL do Produto, URL da Imagem, Ordem, Exibir
+- Coluna "Exibir": "Sim" = mostra o item, "Não" = oculta o item
 - API RESTful para comunicação
 - Fallback para múltiplos proxies CORS
 - Sincronização automática em background
+- Filtragem automática de itens ocultos
 
 ## UI/UX Requirements
 - Tema escuro elegante (#1a1a1a → #2d2d2d)

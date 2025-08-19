@@ -98,6 +98,7 @@ export class SheetsService {
   private static async parseCSV(csvText: string): Promise<Gift[]> {
     const lines = csvText.split('\n');
     const gifts: Gift[] = [];
+    let hiddenItemsCount = 0;
     
     // Skip header row
     for (let i = 1; i < lines.length; i++) {
@@ -107,21 +108,35 @@ export class SheetsService {
       const columns = this.parseCSVLine(line);
       
       if (columns.length >= 3 && columns[0] && columns[1] && columns[2]) {
+        // Check visibility column (column 4, index 4)
+        // Expected values: "Sim" = show, "Não" = hide
+        const visibilityValue = columns[4] ? columns[4].trim().toLowerCase() : 'sim';
+        const isVisible = visibilityValue === 'sim' || visibilityValue === 'yes' || visibilityValue === 's';
+        
         const gift: Gift = {
           id: this.generateUniqueId(columns[0].trim()),
           title: columns[0].trim(),
           productUrl: columns[1].trim(),
           imageUrl: columns[2].trim(),
           order: columns[3] ? parseInt(columns[3].trim()) || 999 : 999,
+          visible: isVisible,
           timestamp: Date.now(),
           createdAt: new Date().toISOString(),
           source: 'google_sheets',
         };
         
-        if (this.isValidUrl(gift.productUrl) && this.isValidUrl(gift.imageUrl)) {
+        // Only include gifts that are visible and have valid URLs
+        if (gift.visible && this.isValidUrl(gift.productUrl) && this.isValidUrl(gift.imageUrl)) {
           gifts.push(gift);
+        } else if (!gift.visible) {
+          hiddenItemsCount++;
+          console.log(`🚫 Item oculto: "${gift.title}" (configurado para não exibir)`);
         }
       }
+    }
+    
+    if (hiddenItemsCount > 0) {
+      console.log(`📋 Total de itens ocultos: ${hiddenItemsCount}`);
     }
     
     // Sort by order

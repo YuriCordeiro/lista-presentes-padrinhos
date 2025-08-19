@@ -4,6 +4,7 @@ export interface Gift {
   productUrl: string;
   imageUrl: string;
   order: number;
+  visible: boolean;
   timestamp: number;
   createdAt: string;
   source: 'google_sheets';
