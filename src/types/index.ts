@@ -5,9 +5,29 @@ export interface Gift {
   imageUrl: string;
   order: number;
   visible: boolean;
+  reserved: boolean;
+  reservedBy?: string;
+  reservedAt?: string;
+  rowIndex?: number; // Índice da linha na planilha para API
   timestamp: number;
   createdAt: string;
   source: 'google_sheets';
+}
+
+export interface ReservationData {
+  giftId: string;
+  giftTitle: string;
+  guestName: string;
+  message?: string;
+  email: string;
+  timestamp: string;
+}
+
+export interface ModalState {
+  isOpen: boolean;
+  type: 'reservation' | 'confirmation' | null;
+  gift?: Gift;
+  reservationData?: ReservationData;
 }
 
 export interface AppConfig {

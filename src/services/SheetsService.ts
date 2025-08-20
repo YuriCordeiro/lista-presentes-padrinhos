@@ -120,6 +120,8 @@ export class SheetsService {
           imageUrl: columns[2].trim(),
           order: columns[3] ? parseInt(columns[3].trim()) || 999 : 999,
           visible: isVisible,
+          reserved: false,
+          rowIndex: i, // Adicionar índice da linha para API
           timestamp: Date.now(),
           createdAt: new Date().toISOString(),
           source: 'google_sheets',

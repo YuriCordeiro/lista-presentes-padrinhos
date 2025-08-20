@@ -47,22 +47,41 @@ Uma aplicação elegante e moderna para exibir lista de presentes para padrinhos
 - ✅ Estados de carregamento informativos
 - ✅ Footer elegante com assinatura
 
-### Funcionalidades Técnicas
-- ✅ Carregamento assíncrono de dados
-- ✅ Validação automática de imagens
-- ✅ Sistema de cache local
-- ✅ Detecção online/offline
-- ✅ Auto-sincronização
-- ✅ PWA com manifest
-- ✅ Otimizações de performance
+### 🎁 Sistema de Reservas
+- ✅ Botão "Vou Comprar" em cada presente
+- ✅ Modal para inserir dados do padrinho
+- ✅ Confirmação de reserva
+- ✅ Email automático para os noivos
+- ✅ Estado visual para presentes reservados
+- ✅ Persistência local das reservas
 
-## 🔧 Configuração Google Sheets
+### 🔐 Segurança
+- ✅ Variáveis de ambiente para credenciais
+- ✅ Arquivo .env protegido no .gitignore
+- ✅ EmailJS para envio seguro de emails
+- ✅ Validação de dados de entrada
 
-### Estrutura da Planilha (Colunas A-D):
+## 🔧 Configuração
+
+### Variáveis de Ambiente
+Para proteger suas credenciais, configure as variáveis de ambiente:
+
+```bash
+# Copie o arquivo de exemplo
+cp .env.example .env
+
+# Edite o arquivo .env com suas credenciais reais
+# Veja ENV_SETUP.md para instruções detalhadas
+```
+
+### Google Sheets
+
+### Estrutura da Planilha (Colunas A-E):
 - **A**: Título do Produto
 - **B**: URL do Produto  
 - **C**: URL da Imagem
 - **D**: Ordem (número para ordenação)
+- **E**: Exibir (Sim/Não - controla visibilidade)
 
 ### Configuração:
 1. Abra sua planilha no Google Sheets
@@ -71,7 +90,13 @@ Uma aplicação elegante e moderna para exibir lista de presentes para padrinhos
 4. Copie o ID da URL (entre `/d/` e `/edit`)
 5. Atualize `SPREADSHEET_ID` em `src/services/SheetsService.ts`
 
-## 🚀 Desenvolvimento
+## � Documentação
+
+- **`ENV_SETUP.md`** - Configuração de variáveis de ambiente
+- **`RESERVAS_SETUP.md`** - Configuração do sistema de reservas
+- **`IMPLEMENTACAO_COMPLETA.md`** - Detalhes da implementação
+
+## �🚀 Desenvolvimento
 
 ### Instalação
 ```bash

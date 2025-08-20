@@ -6,22 +6,33 @@ import type { Gift } from '../types';
 interface GiftCardProps {
   gift: Gift;
   index: number;
+  isReserved?: boolean;
+  onReserve?: (gift: Gift) => void;
 }
 
-const Card = styled(motion.div)`
-  background: ${({ theme }) => theme.glassmorphism.background};
+const Card = styled(motion.div)<{ $isReserved?: boolean }>`
+  background: ${({ theme, $isReserved }) => 
+    $isReserved 
+      ? 'rgba(255, 255, 255, 0.05)' 
+      : theme.glassmorphism.background
+  };
   backdrop-filter: ${({ theme }) => theme.glassmorphism.backdropFilter};
-  border: ${({ theme }) => theme.glassmorphism.border};
+  border: ${({ theme, $isReserved }) => 
+    $isReserved 
+      ? '1px solid rgba(255, 255, 255, 0.1)' 
+      : theme.glassmorphism.border
+  };
   border-radius: ${({ theme }) => theme.borderRadius.xl};
   overflow: hidden;
   box-shadow: ${({ theme }) => theme.shadows.lg};
   transition: all ${({ theme }) => theme.animations.duration.normal} ${({ theme }) => theme.animations.easing.default};
   width: 100%;
   max-width: 100%;
+  opacity: ${({ $isReserved }) => $isReserved ? 0.6 : 1};
   
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: ${({ theme }) => theme.shadows.xl};
+    transform: ${({ $isReserved }) => $isReserved ? 'none' : 'translateY(-4px)'};
+    box-shadow: ${({ theme, $isReserved }) => $isReserved ? theme.shadows.lg : theme.shadows.xl};
   }
   
   @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
@@ -92,14 +103,18 @@ const ProductTitle = styled.h3`
   }
 `;
 
-const ActionButton = styled.a`
+const ActionButton = styled.a<{ $isDisabled?: boolean }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.sm};
   padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
-  color: white;
+  background: ${({ $isDisabled }) => 
+    $isDisabled 
+      ? 'rgba(255, 255, 255, 0.1)' 
+      : 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%)'
+  };
+  color: ${({ $isDisabled }) => $isDisabled ? 'rgba(255, 255, 255, 0.5)' : 'white'};
   text-decoration: none;
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
@@ -107,18 +122,31 @@ const ActionButton = styled.a`
   transition: all ${({ theme }) => theme.animations.duration.normal} ${({ theme }) => theme.animations.easing.default};
   text-align: center;
   min-height: 48px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid ${({ $isDisabled }) => 
+    $isDisabled ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.1)'
+  };
+  box-shadow: ${({ $isDisabled }) => 
+    $isDisabled ? 'none' : '0 4px 15px rgba(0, 0, 0, 0.3)'
+  };
+  cursor: ${({ $isDisabled }) => $isDisabled ? 'not-allowed' : 'pointer'};
   
   &:hover {
-    background: linear-gradient(135deg, #2d2d2d 0%, #404040 50%, #2d2d2d 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: ${({ $isDisabled }) => 
+      $isDisabled 
+        ? 'rgba(255, 255, 255, 0.1)' 
+        : 'linear-gradient(135deg, #2d2d2d 0%, #404040 50%, #2d2d2d 100%)'
+    };
+    transform: ${({ $isDisabled }) => $isDisabled ? 'none' : 'translateY(-1px)'};
+    box-shadow: ${({ $isDisabled }) => 
+      $isDisabled ? 'none' : '0 6px 20px rgba(0, 0, 0, 0.4)'
+    };
+    border-color: ${({ $isDisabled }) => 
+      $isDisabled ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.2)'
+    };
   }
   
   &:active {
-    transform: translateY(0);
+    transform: ${({ $isDisabled }) => $isDisabled ? 'none' : 'translateY(0)'};
   }
   
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
@@ -126,9 +154,88 @@ const ActionButton = styled.a`
   }
 `;
 
-export const GiftCard: React.FC<GiftCardProps> = ({ gift, index }) => {
+const ReserveButton = styled.button<{ $isDisabled?: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.lg};
+  background: ${({ $isDisabled }) => 
+    $isDisabled 
+      ? 'rgba(255, 255, 255, 0.05)' 
+      : 'linear-gradient(135deg, #2d5a2d 0%, #4a7c4a 50%, #2d5a2d 100%)'
+  };
+  color: ${({ $isDisabled }) => $isDisabled ? 'rgba(255, 255, 255, 0.3)' : 'white'};
+  border: 1px solid ${({ $isDisabled }) => 
+    $isDisabled ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.2)'
+  };
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  font-size: ${({ theme }) => theme.typography.fontSize.base};
+  transition: all ${({ theme }) => theme.animations.duration.normal} ${({ theme }) => theme.animations.easing.default};
+  text-align: center;
+  min-height: 48px;
+  box-shadow: ${({ $isDisabled }) => 
+    $isDisabled ? 'none' : '0 4px 15px rgba(45, 90, 45, 0.3)'
+  };
+  cursor: ${({ $isDisabled }) => $isDisabled ? 'not-allowed' : 'pointer'};
+  
+  &:hover:not(:disabled) {
+    background: ${({ $isDisabled }) => 
+      $isDisabled 
+        ? 'rgba(255, 255, 255, 0.05)' 
+        : 'linear-gradient(135deg, #4a7c4a 0%, #6b9b6b 50%, #4a7c4a 100%)'
+    };
+    transform: ${({ $isDisabled }) => $isDisabled ? 'none' : 'translateY(-1px)'};
+    box-shadow: ${({ $isDisabled }) => 
+      $isDisabled ? 'none' : '0 6px 20px rgba(45, 90, 45, 0.4)'
+    };
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
+    padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.xl};
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.sm};
+  flex-direction: column;
+  
+  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
+    flex-direction: row;
+  }
+`;
+
+const ReservedBadge = styled.div`
+  background: linear-gradient(135deg, #4a7c4a 0%, #6b9b6b 50%, #4a7c4a 100%);
+  color: white;
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-size: ${({ theme }) => theme.typography.fontSize.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  text-align: center;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`;
+
+export const GiftCard: React.FC<GiftCardProps> = ({ gift, index, isReserved = false, onReserve }) => {
+  const handleReserve = () => {
+    if (!isReserved && onReserve) {
+      onReserve(gift);
+    }
+  };
+
   return (
     <Card
+      $isReserved={isReserved}
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ 
@@ -136,8 +243,8 @@ export const GiftCard: React.FC<GiftCardProps> = ({ gift, index }) => {
         delay: index * 0.1,
         ease: "easeOut"
       }}
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={isReserved ? {} : { y: -4 }}
+      whileTap={isReserved ? {} : { scale: 0.98 }}
     >
       <ImageContainer>
         <ProductImage 
@@ -154,13 +261,35 @@ export const GiftCard: React.FC<GiftCardProps> = ({ gift, index }) => {
       <CardContent>
         <ProductTitle>{gift.title}</ProductTitle>
         
-        <ActionButton 
-          href={gift.productUrl} 
-          target="_blank" 
-          rel="noopener noreferrer"
-        >
-          Ver Produto <span role="img" aria-label="gift">🎁</span>
-        </ActionButton>
+        {isReserved && (
+          <ReservedBadge>
+            ✅ Presente Reservado
+          </ReservedBadge>
+        )}
+        
+        <ButtonContainer>
+          <ActionButton 
+            href={gift.productUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            $isDisabled={false}
+          >
+            Ver Produto <span role="img" aria-label="gift">🎁</span>
+          </ActionButton>
+          
+          <ReserveButton 
+            onClick={handleReserve}
+            disabled={isReserved}
+            $isDisabled={isReserved}
+            type="button"
+          >
+            {isReserved ? (
+              <>Reservado <span role="img" aria-label="check">✅</span></>
+            ) : (
+              <>Vou Comprar <span role="img" aria-label="heart">💝</span></>
+            )}
+          </ReserveButton>
+        </ButtonContainer>
       </CardContent>
     </Card>
   );

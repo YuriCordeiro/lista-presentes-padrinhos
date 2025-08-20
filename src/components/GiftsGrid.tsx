@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GiftCard } from './GiftCard';
+import { ReservationModal } from './ReservationModal';
+import { useReservations } from '../hooks/useReservations';
 import type { Gift, LoadingState } from '../types';
 
 interface GiftsGridProps {
@@ -113,6 +115,22 @@ const LoadingIndicator = styled(motion.div)`
 `;
 
 export const GiftsGrid: React.FC<GiftsGridProps> = ({ gifts, loadingState }) => {
+  const {
+    modalState,
+    isSubmitting,
+    openReservationModal,
+    closeModal,
+    submitReservation,
+    confirmReservation,
+    isGiftReserved,
+    loadSavedReservations,
+  } = useReservations();
+
+  // Carregar reservas salvas na inicialização
+  useEffect(() => {
+    loadSavedReservations();
+  }, [loadSavedReservations]);
+
   const showEmptyState = gifts.length === 0 && !loadingState.isLoading;
   const showLoadingIndicator = gifts.length === 0 && loadingState.isLoading;
 
@@ -173,13 +191,22 @@ export const GiftsGrid: React.FC<GiftsGridProps> = ({ gifts, loadingState }) => 
                   key={gift.id} 
                   gift={gift} 
                   index={index}
+                  isReserved={isGiftReserved(gift.id)}
+                  onReserve={openReservationModal}
                 />
               ))}
             </Grid>
-
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ReservationModal
+        modalState={modalState}
+        isSubmitting={isSubmitting}
+        onClose={closeModal}
+        onSubmitReservation={submitReservation}
+        onConfirmReservation={confirmReservation}
+      />
     </Section>
   );
 };
