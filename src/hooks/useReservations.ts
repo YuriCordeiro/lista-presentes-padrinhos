@@ -117,9 +117,10 @@ export const useReservations = (gifts: Gift[] = []) => {
     setModalState({
       isOpen: true,
       type: 'confirmation',
+      gift: modalState.gift, // Preservar o gift do modal anterior
       reservationData,
     });
-  }, []);
+  }, [modalState.gift]);
 
   const closeModal = useCallback(() => {
     setModalState({
@@ -132,6 +133,8 @@ export const useReservations = (gifts: Gift[] = []) => {
     setIsSubmitting(true);
     
     try {
+      console.log('🔄 submitReservation called with:', { guestName, message, giftTitle: gift.title });
+      
       const reservationData: ReservationData = {
         giftId: gift.id,
         giftTitle: gift.title,
@@ -141,8 +144,10 @@ export const useReservations = (gifts: Gift[] = []) => {
         timestamp: new Date().toISOString(),
       };
 
-      // Primeiro, mostrar o modal de confirmação
-      closeModal();
+      console.log('📋 Reservation data prepared:', reservationData);
+      
+      // Abrir modal de confirmação (preservando o gift)
+      console.log('✅ Opening confirmation modal...');
       openConfirmationModal(reservationData);
       
     } catch (error) {
@@ -154,16 +159,21 @@ export const useReservations = (gifts: Gift[] = []) => {
   }, [closeModal, openConfirmationModal]);
 
   const confirmReservation = useCallback(async (reservationData: ReservationData) => {
+    console.log('🔄 confirmReservation called with:', reservationData);
+    console.log('🔧 Server available:', serverAvailable);
+    
     setIsSubmitting(true);
     
     try {
       let sheetsUpdated = false;
       
       // Tentar atualizar na planilha primeiro, se servidor disponível
-      if (serverAvailable) {
+      if (serverAvailable === true) {
+        console.log('📊 Attempting to update spreadsheet...');
         // Buscar o presente para obter rowIndex
         const gift = modalState.gift;
         if (gift && gift.rowIndex !== undefined) {
+          console.log('🎁 Gift found with rowIndex:', gift.rowIndex);
           const apiSuccess = await ReservationAPI.reserveGift(
             reservationData.giftId,
             reservationData.giftTitle,
@@ -179,11 +189,41 @@ export const useReservations = (gifts: Gift[] = []) => {
             alert('Erro ao atualizar a planilha. Tente novamente.');
             return;
           }
+        } else {
+          console.log('❌ Gift not found or missing rowIndex');
+          alert('Erro: dados do presente não encontrados.');
+          return;
         }
-      } else {
+      } else if (serverAvailable === false) {
         console.log('⚠️ Servidor não disponível - não é possível atualizar a planilha');
         alert('Servidor não disponível. Não é possível completar a reserva no momento.');
         return;
+      } else {
+        console.log('🔄 Servidor ainda não verificado, tentando mesmo assim...');
+        // Tentar mesmo com servidor em estado desconhecido
+        const gift = modalState.gift;
+        if (gift && gift.rowIndex !== undefined) {
+          console.log('🎁 Gift found with rowIndex:', gift.rowIndex);
+          const apiSuccess = await ReservationAPI.reserveGift(
+            reservationData.giftId,
+            reservationData.giftTitle,
+            reservationData.guestName,
+            gift.rowIndex
+          );
+          
+          if (apiSuccess) {
+            console.log('✅ Reserva salva na planilha Google Sheets');
+            sheetsUpdated = true;
+          } else {
+            console.log('⚠️ Falhou ao atualizar a planilha');
+            alert('Erro ao atualizar a planilha. Tente novamente.');
+            return;
+          }
+        } else {
+          console.log('❌ Gift not found or missing rowIndex');
+          alert('Erro: dados do presente não encontrados.');
+          return;
+        }
       }
       
       // Só enviar email se a planilha foi atualizada com sucesso

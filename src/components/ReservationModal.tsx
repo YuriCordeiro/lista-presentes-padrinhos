@@ -212,14 +212,25 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔄 Form submitted!', { guestName, message, gift: modalState.gift });
     if (guestName.trim() && modalState.gift) {
+      console.log('✅ Calling onSubmitReservation...');
       onSubmitReservation(guestName, message, modalState.gift);
+    } else {
+      console.log('❌ Form validation failed', { 
+        hasName: !!guestName.trim(), 
+        hasGift: !!modalState.gift 
+      });
     }
   };
 
   const handleConfirm = () => {
+    console.log('🔄 Confirm button clicked!', { reservationData: modalState.reservationData });
     if (modalState.reservationData) {
+      console.log('✅ Calling onConfirmReservation...');
       onConfirmReservation(modalState.reservationData);
+    } else {
+      console.log('❌ No reservation data found');
     }
   };
 
