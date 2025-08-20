@@ -63,11 +63,19 @@ module.exports = async (req, res) => {
         spreadsheetId: spreadsheetId
       });
 
+      // Obter informações das abas
+      const sheetNames = response.data.sheets.map(sheet => ({
+        name: sheet.properties.title,
+        id: sheet.properties.sheetId,
+        index: sheet.properties.index
+      }));
+
       res.json({
         status: 'success',
         message: 'Credenciais funcionando corretamente',
         spreadsheetTitle: response.data.properties.title,
         sheetsCount: response.data.sheets.length,
+        sheetNames: sheetNames,
         timestamp: new Date().toISOString()
       });
 
