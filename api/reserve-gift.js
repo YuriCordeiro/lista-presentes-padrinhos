@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   // Configurar CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -48,7 +48,7 @@ export default async function handler(req, res) {
 
     // Tentar atualizar no Google Sheets
     try {
-      const { google } = await import('googleapis');
+      const { google } = require('googleapis');
       
       const credentials = {
         type: 'service_account',
@@ -107,4 +107,4 @@ export default async function handler(req, res) {
       details: error.message
     });
   }
-}
+};
