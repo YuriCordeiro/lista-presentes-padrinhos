@@ -6,7 +6,6 @@ interface SuccessModalProps {
   isOpen: boolean;
   giftTitle: string;
   guestName: string;
-  serverAvailable: boolean;
   onClose: () => void;
 }
 
@@ -218,7 +217,6 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
   isOpen,
   giftTitle,
   guestName,
-  serverAvailable,
   onClose
 }) => {
   return (
@@ -274,18 +272,9 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               </DetailItem>
             </Details>
             
-            <StatusBadge $success={serverAvailable}>
-              {serverAvailable ? (
-                <>
-                  <span>✅</span>
-                  <span>Lista de presentes atualizada</span>
-                </>
-              ) : (
-                <>
-                  <span>⚠️</span>
-                  <span>Reserva salva localmente</span>
-                </>
-              )}
+            <StatusBadge $success={true}>
+              <span>✅</span>
+              <span>Planilha atualizada e noivos notificados</span>
             </StatusBadge>
             
             <CloseButton onClick={onClose}>

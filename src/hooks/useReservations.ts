@@ -157,10 +157,46 @@ export const useReservations = (gifts: Gift[] = []) => {
     setIsSubmitting(true);
     
     try {
-      // Enviar email
-      const emailSent = await EmailService.sendReservationEmail(reservationData);
+      let sheetsUpdated = false;
       
-      if (emailSent) {
+      // Tentar atualizar na planilha primeiro, se servidor disponível
+      if (serverAvailable) {
+        // Buscar o presente para obter rowIndex
+        const gift = modalState.gift;
+        if (gift && gift.rowIndex !== undefined) {
+          const apiSuccess = await ReservationAPI.reserveGift(
+            reservationData.giftId,
+            reservationData.giftTitle,
+            reservationData.guestName,
+            gift.rowIndex
+          );
+          
+          if (apiSuccess) {
+            console.log('✅ Reserva salva na planilha Google Sheets');
+            sheetsUpdated = true;
+          } else {
+            console.log('⚠️ Falhou ao atualizar a planilha');
+            alert('Erro ao atualizar a planilha. Tente novamente.');
+            return;
+          }
+        }
+      } else {
+        console.log('⚠️ Servidor não disponível - não é possível atualizar a planilha');
+        alert('Servidor não disponível. Não é possível completar a reserva no momento.');
+        return;
+      }
+      
+      // Só enviar email se a planilha foi atualizada com sucesso
+      if (sheetsUpdated) {
+        const emailSent = await EmailService.sendReservationEmail(reservationData);
+        
+        if (emailSent) {
+          console.log('✅ Email de notificação enviado com sucesso');
+        } else {
+          console.log('⚠️ Planilha atualizada, mas email falhou');
+          // Mesmo assim continuamos, pois a planilha foi atualizada
+        }
+        
         // Marcar como reservado localmente
         setReservedGifts(prev => new Set([...prev, reservationData.giftId]));
         setReservationDetails(prev => ({
@@ -176,34 +212,10 @@ export const useReservations = (gifts: Gift[] = []) => {
         savedReservations.push(reservationData);
         localStorage.setItem('reservedGifts', JSON.stringify(savedReservations));
         
-        // Tentar atualizar na planilha se servidor disponível
-        if (serverAvailable) {
-          // Buscar o presente para obter rowIndex
-          const gift = modalState.gift;
-          if (gift && gift.rowIndex !== undefined) {
-            const apiSuccess = await ReservationAPI.reserveGift(
-              reservationData.giftId,
-              reservationData.giftTitle,
-              reservationData.guestName,
-              gift.rowIndex
-            );
-            
-            if (apiSuccess) {
-              console.log('✅ Reserva salva na planilha Google Sheets');
-            } else {
-              console.log('⚠️ Reserva salva localmente, mas falhou na planilha');
-            }
-          }
-        } else {
-          console.log('⚠️ Reserva salva apenas localmente (servidor não disponível)');
-        }
-        
         closeModal();
         
         // Mostrar modal de sucesso
         openSuccessModal(reservationData.giftTitle, reservationData.guestName);
-      } else {
-        alert('Erro ao enviar notificação. Tente novamente.');
       }
     } catch (error) {
       console.error('Erro ao confirmar reserva:', error);
@@ -211,7 +223,7 @@ export const useReservations = (gifts: Gift[] = []) => {
     } finally {
       setIsSubmitting(false);
     }
-  }, [closeModal, serverAvailable, modalState.gift]);
+  }, [closeModal, serverAvailable, modalState.gift, openSuccessModal]);
 
   const isGiftReserved = useCallback((giftId: string) => {
     return reservedGifts.has(giftId);

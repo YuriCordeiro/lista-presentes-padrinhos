@@ -119,7 +119,6 @@ export const GiftsGrid: React.FC<GiftsGridProps> = ({ gifts, loadingState }) => 
   const {
     modalState,
     isSubmitting,
-    serverAvailable,
     successModalState,
     openReservationModal,
     closeModal,
@@ -216,7 +215,6 @@ export const GiftsGrid: React.FC<GiftsGridProps> = ({ gifts, loadingState }) => 
         isOpen={successModalState.isOpen}
         giftTitle={successModalState.giftTitle}
         guestName={successModalState.guestName}
-        serverAvailable={serverAvailable || false}
         onClose={closeSuccessModal}
       />
     </Section>
