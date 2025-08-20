@@ -1,5 +1,12 @@
 export class ReservationAPI {
-  private static readonly API_BASE_URL = 'http://localhost:3001/api';
+  private static getApiBaseUrl(): string {
+    // Se estiver em produção (Vercel), usar a URL da própria aplicação
+    if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+      return `${window.location.origin}/api`;
+    }
+    // Se estiver em desenvolvimento local
+    return 'http://localhost:3001/api';
+  }
 
   static async reserveGift(
     giftId: string,
@@ -8,7 +15,7 @@ export class ReservationAPI {
     rowIndex: number
   ): Promise<boolean> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/reserve-gift`, {
+      const response = await fetch(`${this.getApiBaseUrl()}/reserve-gift`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +45,7 @@ export class ReservationAPI {
 
   static async syncReservations(): Promise<{[key: string]: { reserved: boolean; reservedBy?: string }}> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/sync-reservations`);
+      const response = await fetch(`${this.getApiBaseUrl()}/sync-reservations`);
       
       if (!response.ok) {
         console.error('❌ Erro ao sincronizar reservas');
@@ -56,7 +63,7 @@ export class ReservationAPI {
 
   static async checkServerHealth(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/health`);
+      const response = await fetch(`${this.getApiBaseUrl()}/health`);
       return response.ok;
     } catch (error) {
       console.error('❌ Servidor backend não está respondendo:', error);
