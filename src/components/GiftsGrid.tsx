@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GiftCard } from './GiftCard';
 import { ReservationModal } from './ReservationModal';
+import { SuccessModal } from './SuccessModal';
 import { useReservations } from '../hooks/useReservations';
 import type { Gift, LoadingState } from '../types';
 
@@ -118,8 +119,11 @@ export const GiftsGrid: React.FC<GiftsGridProps> = ({ gifts, loadingState }) => 
   const {
     modalState,
     isSubmitting,
+    serverAvailable,
+    successModalState,
     openReservationModal,
     closeModal,
+    closeSuccessModal,
     submitReservation,
     confirmReservation,
     isGiftReserved,
@@ -206,6 +210,14 @@ export const GiftsGrid: React.FC<GiftsGridProps> = ({ gifts, loadingState }) => 
         onClose={closeModal}
         onSubmitReservation={submitReservation}
         onConfirmReservation={confirmReservation}
+      />
+
+      <SuccessModal
+        isOpen={successModalState.isOpen}
+        giftTitle={successModalState.giftTitle}
+        guestName={successModalState.guestName}
+        serverAvailable={serverAvailable || false}
+        onClose={closeSuccessModal}
       />
     </Section>
   );

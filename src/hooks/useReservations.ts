@@ -12,6 +12,15 @@ export const useReservations = (gifts: Gift[] = []) => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverAvailable, setServerAvailable] = useState<boolean | null>(null);
+  const [successModalState, setSuccessModalState] = useState<{
+    isOpen: boolean;
+    giftTitle: string;
+    guestName: string;
+  }>({
+    isOpen: false,
+    giftTitle: '',
+    guestName: '',
+  });
 
   // Sincronizar com dados da planilha quando gifts mudam
   useEffect(() => {
@@ -79,6 +88,22 @@ export const useReservations = (gifts: Gift[] = []) => {
       console.error('❌ Erro na sincronização:', error);
     }
   }, [serverAvailable]);
+
+  const openSuccessModal = useCallback((giftTitle: string, guestName: string) => {
+    setSuccessModalState({
+      isOpen: true,
+      giftTitle,
+      guestName,
+    });
+  }, []);
+
+  const closeSuccessModal = useCallback(() => {
+    setSuccessModalState({
+      isOpen: false,
+      giftTitle: '',
+      guestName: '',
+    });
+  }, []);
 
   const openReservationModal = useCallback((gift: Gift) => {
     setModalState({
@@ -175,11 +200,8 @@ export const useReservations = (gifts: Gift[] = []) => {
         
         closeModal();
         
-        // Mostrar sucesso
-        const message = serverAvailable 
-          ? '🎉 Presente reservado com sucesso! Os noivos foram notificados e a planilha foi atualizada.'
-          : '🎉 Presente reservado localmente! Os noivos foram notificados por email.';
-        alert(message);
+        // Mostrar modal de sucesso
+        openSuccessModal(reservationData.giftTitle, reservationData.guestName);
       } else {
         alert('Erro ao enviar notificação. Tente novamente.');
       }
@@ -210,8 +232,11 @@ export const useReservations = (gifts: Gift[] = []) => {
     modalState,
     isSubmitting,
     serverAvailable,
+    successModalState,
     openReservationModal,
     closeModal,
+    openSuccessModal,
+    closeSuccessModal,
     submitReservation,
     confirmReservation,
     isGiftReserved,
