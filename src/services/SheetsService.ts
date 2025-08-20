@@ -113,6 +113,11 @@ export class SheetsService {
         const visibilityValue = columns[4] ? columns[4].trim().toLowerCase() : 'sim';
         const isVisible = visibilityValue === 'sim' || visibilityValue === 'yes' || visibilityValue === 's';
         
+        // Check reservation status (columns F and G)
+        const reservationStatus = columns[5] ? columns[5].trim().toLowerCase() : '';
+        const isReserved = reservationStatus === 'sim' || reservationStatus === 'yes' || reservationStatus === 's';
+        const reservedBy = columns[6] ? columns[6].trim() : undefined;
+
         const gift: Gift = {
           id: this.generateUniqueId(columns[0].trim()),
           title: columns[0].trim(),
@@ -120,7 +125,9 @@ export class SheetsService {
           imageUrl: columns[2].trim(),
           order: columns[3] ? parseInt(columns[3].trim()) || 999 : 999,
           visible: isVisible,
-          reserved: false,
+          reserved: isReserved,
+          reservedBy: reservedBy,
+          reservedAt: isReserved ? new Date().toISOString() : undefined,
           rowIndex: i, // Adicionar índice da linha para API
           timestamp: Date.now(),
           createdAt: new Date().toISOString(),

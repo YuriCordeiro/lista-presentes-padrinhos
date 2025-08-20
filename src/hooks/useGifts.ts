@@ -72,6 +72,15 @@ export const useGifts = () => {
       // Clear existing gifts for fresh load
       setGifts([]);
 
+      // Log reservation status from spreadsheet
+      const reservedFromSheet = allGifts.filter(gift => gift.reserved);
+      if (reservedFromSheet.length > 0) {
+        console.log(`📋 Encontrados ${reservedFromSheet.length} presentes já reservados na planilha:`);
+        reservedFromSheet.forEach(gift => {
+          console.log(`  - "${gift.title}" reservado por: ${gift.reservedBy}`);
+        });
+      }
+
       // Validate and add gifts progressively
       allGifts.forEach((gift, index) => {
         const delay = index * 300; // 300ms between each validation

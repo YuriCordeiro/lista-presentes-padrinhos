@@ -124,7 +124,7 @@ export const GiftsGrid: React.FC<GiftsGridProps> = ({ gifts, loadingState }) => 
     confirmReservation,
     isGiftReserved,
     loadSavedReservations,
-  } = useReservations();
+  } = useReservations(gifts);
 
   // Carregar reservas salvas na inicialização
   useEffect(() => {

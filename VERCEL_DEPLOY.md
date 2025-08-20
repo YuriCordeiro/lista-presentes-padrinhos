@@ -68,8 +68,7 @@ Access to fetch at 'http://localhost:3001/api/health' from origin 'https://lista
 ### 3. Exemplo de GOOGLE_PRIVATE_KEY:
 ```
 -----BEGIN PRIVATE KEY-----
-MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDt+7gsr2Bhnu8T
-Ybog0mynEKJBMU/6u0r5ewPs2DwibqqfZGxJT/auOgilCroXsv9Crp0Be7S4KBKW
+...
 ...resto da chave...
 -----END PRIVATE KEY-----
 ```

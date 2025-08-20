@@ -3,7 +3,7 @@ import type { Gift, ReservationData, ModalState } from '../types';
 import { EmailService } from '../services/EmailService';
 import { ReservationAPI } from '../services/ReservationAPI';
 
-export const useReservations = () => {
+export const useReservations = (gifts: Gift[] = []) => {
   const [reservedGifts, setReservedGifts] = useState<Set<string>>(new Set());
   const [reservationDetails, setReservationDetails] = useState<{[key: string]: { reservedBy?: string; reservedAt?: string }}>({});
   const [modalState, setModalState] = useState<ModalState>({
@@ -12,6 +12,29 @@ export const useReservations = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverAvailable, setServerAvailable] = useState<boolean | null>(null);
+
+  // Sincronizar com dados da planilha quando gifts mudam
+  useEffect(() => {
+    const reservedIds = new Set<string>();
+    const details: {[key: string]: { reservedBy?: string; reservedAt?: string }} = {};
+
+    gifts.forEach(gift => {
+      if (gift.reserved) {
+        reservedIds.add(gift.id);
+        details[gift.id] = {
+          reservedBy: gift.reservedBy,
+          reservedAt: gift.reservedAt,
+        };
+      }
+    });
+
+    setReservedGifts(reservedIds);
+    setReservationDetails(details);
+
+    if (reservedIds.size > 0) {
+      console.log(`📊 Status de reservas da planilha aplicado: ${reservedIds.size} presentes reservados`);
+    }
+  }, [gifts]);
 
   // Verificar se o servidor está disponível
   useEffect(() => {
