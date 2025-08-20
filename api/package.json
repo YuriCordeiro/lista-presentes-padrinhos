@@ -1,5 +1,11 @@
 {
+  "name": "api",
+  "version": "1.0.0",
+  "type": "commonjs",
   "dependencies": {
     "googleapis": "^156.0.0"
+  },
+  "engines": {
+    "node": ">=18.x"
   }
 }
