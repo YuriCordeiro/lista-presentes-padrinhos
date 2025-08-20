@@ -119,7 +119,7 @@ const Input = styled.input`
   font-size: ${({ theme }) => theme.typography.fontSize.base};
   
   &::placeholder {
-    color: ${({ theme }) => theme.colors.text.tertiary};
+    color: ${({ theme }) => theme.colors.text.muted};
   }
   
   &:focus {
@@ -142,7 +142,7 @@ const TextArea = styled.textarea`
   font-family: inherit;
   
   &::placeholder {
-    color: ${({ theme }) => theme.colors.text.tertiary};
+    color: ${({ theme }) => theme.colors.text.muted};
   }
   
   &:focus {

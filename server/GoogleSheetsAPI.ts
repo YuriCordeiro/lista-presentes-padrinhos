@@ -21,11 +21,14 @@ export class GoogleSheetsAPI {
       throw new Error('Google Service Account credentials not configured');
     }
 
-    this.auth = new google.auth.JWT({
-      email: serviceAccountEmail,
-      key: privateKey,
-      scopes: ['https://www.googleapis.com/auth/spreadsheets']
-    });
+    const credentials = {
+      type: 'service_account',
+      client_email: serviceAccountEmail,
+      private_key: privateKey,
+    };
+
+    this.auth = google.auth.fromJSON(credentials);
+    (this.auth as any).scopes = ['https://www.googleapis.com/auth/spreadsheets'];
 
     await this.auth.authorize();
     return this.auth;
