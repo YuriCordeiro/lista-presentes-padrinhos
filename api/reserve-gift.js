@@ -50,6 +50,8 @@ module.exports = async (req, res) => {
     try {
       const { google } = require('googleapis');
       
+      console.log('🔗 Conectando com Google Sheets...');
+      
       const credentials = {
         type: 'service_account',
         client_email: serviceAccountEmail,
@@ -60,13 +62,17 @@ module.exports = async (req, res) => {
       auth.scopes = ['https://www.googleapis.com/auth/spreadsheets'];
 
       await auth.authorize();
+      console.log('✅ Autenticação Google realizada com sucesso');
 
       const sheets = google.sheets({ version: 'v4', auth });
 
       // Atualizar a coluna F (Reservado) e G (Reservado Por)
-      const range = `Lista!F${rowIndex + 1}:G${rowIndex + 1}`;
+      // rowIndex já vem ajustado do frontend (i do loop que começa em 1)
+      const range = `Lista!F${rowIndex}:G${rowIndex}`;
       
-      await sheets.spreadsheets.values.update({
+      console.log(`📝 Atualizando range: ${range} com valores: ['Sim', '${reservedBy}']`);
+      
+      const updateResponse = await sheets.spreadsheets.values.update({
         spreadsheetId,
         range,
         valueInputOption: 'RAW',
@@ -75,19 +81,23 @@ module.exports = async (req, res) => {
         }
       });
 
-      console.log(`✅ Presente "${giftTitle}" reservado por "${reservedBy}" na linha ${rowIndex + 1} - PLANILHA ATUALIZADA`);
+      console.log(`✅ Presente "${giftTitle}" reservado por "${reservedBy}" na linha ${rowIndex} - PLANILHA ATUALIZADA`);
+      console.log('📊 Resposta do Google Sheets:', JSON.stringify(updateResponse.data, null, 2));
 
       res.json({ 
         success: true, 
         message: 'Presente reservado com sucesso na planilha Google Sheets',
         giftTitle,
         reservedBy,
-        rowIndex: rowIndex + 1,
-        sheets_updated: true
+        rowIndex: rowIndex,
+        sheets_updated: true,
+        range_updated: range,
+        update_response: updateResponse.data
       });
 
     } catch (sheetsError) {
       console.error('❌ Erro ao atualizar Google Sheets:', sheetsError);
+      console.error('📋 Stack trace:', sheetsError.stack);
       
       // Mesmo com erro no Sheets, consideramos sucesso localmente
       res.json({ 
@@ -95,8 +105,9 @@ module.exports = async (req, res) => {
         message: 'Presente reservado localmente (erro na planilha)',
         giftTitle,
         reservedBy,
-        rowIndex: rowIndex + 1,
-        warning: 'Erro ao atualizar planilha: ' + sheetsError.message
+        rowIndex: rowIndex,
+        warning: 'Erro ao atualizar planilha: ' + sheetsError.message,
+        error_details: sheetsError.stack
       });
     }
 
