@@ -28,9 +28,9 @@ Access to fetch at 'http://localhost:3001/api/health' from origin 'https://lista
 No painel do Vercel, adicione:
 
 ```env
-GOOGLE_SERVICE_ACCOUNT_EMAIL=lista-presentes-service@lista-de-padrinhos-cloud.iam.gserviceaccount.com
-GOOGLE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDt+7gsr2Bhnu8T\n...rest of key...\n-----END PRIVATE KEY-----\n
-GOOGLE_SPREADSHEET_ID=1IYr_m43FUPYilTQz_bICKZjHTPg7CUWVXVlS09N-LJI
+GOOGLE_SERVICE_ACCOUNT_EMAIL=lista...@...iam.gserviceaccount.com
+GOOGLE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\<some_real_value>\n...rest of key...\n-----END PRIVATE KEY-----\n
+GOOGLE_SPREADSHEET_ID=<some_real_value>
 ```
 
 ### 2. **Deploy Atualizado**
